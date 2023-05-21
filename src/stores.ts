@@ -50,7 +50,9 @@ export const token = writable(null)
 // })
 
 export const appUrl = readable('', function start(set) {
-	return set('http://127.0.0.1:5173/');
+  	return set('https://spotify-wizard.vercel.app/');
+
+	// return set('http://127.0.0.1:5173/');
 });
 
 export const timeRange = writable('medium_term');
@@ -59,7 +61,8 @@ export const tokenExpired = writable(false);
 
 export const user = writable(null);
 
-export const redirect_uri = writable('http://127.0.0.1:5173/');
+export const redirect_uri = writable('https://spotify-wizard.vercel.app/');
+// export const redirect_uri = writable('http://127.0.0.1:5173/');
 
 export const client_id = writable('8602d91b2c7e4d848d3d1e12657a441d');
 
