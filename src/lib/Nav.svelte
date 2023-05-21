@@ -14,7 +14,7 @@
 				alt="The project logo"
 				src="/images/android-chrome-192x192.png"
 			/>
-			<h1 class="text-4xl font-bold font-major-mono">Spotify Wizard {$page.route}</h1>
+			<h1 class="text-4xl font-bold font-major-mono">Spotify Wizard {$page.url}</h1>
 		</div>
 	</nav>
 {/if}

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Nav from './../lib/Nav.svelte';
 	import { user, token, code, tokenExpired, client_id, redirect_uri } from '../stores';
 	import { redirect } from '@sveltejs/kit';
 	import { page } from '$app/stores';
@@ -45,7 +44,6 @@
 			});
 			if (res.ok) {
 				const data = await res.json();
-				// user.set(data);
 				token.set(data.access_token);
 			} else {
 				tokenExpired.set(true);
@@ -54,6 +52,8 @@
 	}
 
 	async function credentials() {
+		const page_url = $page.url.href
+		redirect_uri.set(page_url)
 		if ($code.length > 0) {
 			await getAccessToken();
 			await getUserData();

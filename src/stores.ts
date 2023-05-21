@@ -49,7 +49,7 @@ export const token = writable(null)
 //   }
 // })
 
-export const appUrl = readable('', function start(set) {
+export const appUrl = writable('', function start(set) {
   	return set('https://spotify-wizard.vercel.app/');
 
 	// return set('http://127.0.0.1:5173/');
