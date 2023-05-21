@@ -56,19 +56,16 @@
 	async function credentials() {
 		if ($code.length > 0) {
 			await getAccessToken();
-			await getUserData()
+			await getUserData();
 		}
 	}
 
 	onMount(credentials);
 </script>
 
-<Nav />
-
-<div class="h-screen flex items-center justify-center bg-green-100">
+<div class="min-h-screen flex items-center justify-center bg-black font-tech-mono text-green-600">
 	{#if $code.length > 0}
 		<div class="grid">
-			<h1 class="text-lg font-bold underline">Your access token is: {$token}</h1>
 			<a href="/profile">
 				<button on:click={() => getUserData()} class="login-btn"
 					>Welcome click here to get started!</button
@@ -77,10 +74,17 @@
 		</div>
 	{:else}
 		<div class="grid">
-			<h1 class="text-3xl font-bold underline">Spotify Wizard coming soon!</h1>
-
-			<a href="/login">
-				<button class="login-btn">Click here to log in!</button>
+			<div>
+				<img alt="The project logo" src="/images/android-chrome-192x192.png" />
+				<h1 class="text-7xl font-bold font-major-mono">Spotify Wizard</h1>
+			</div>
+			<a href="/login" class="group transition duration-300">
+				<button class="login-btn"
+					>Click here to log in!
+					<span
+						class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
+					/>
+				</button>
 			</a>
 		</div>
 	{/if}

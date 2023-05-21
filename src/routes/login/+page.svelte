@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Nav from '$lib/Nav.svelte';
 	import { redirect_uri, client_id } from '../../stores';
 
 	function generateRandomString(length: number) {
@@ -23,18 +24,32 @@
 		state
 	});
 	$: loginLink = authorization_uri + params;
-
 </script>
 
-<div class="h-screen flex items-center justify-center bg-green-100">
-	<div class="grid">
-		<h1 class="text-3xl font-bold underline">Log in page!</h1>
-		<a href="/" class="text-lg font-meduim">"I changes my mind!"</a>
-		<a href={loginLink}>
-			<button class="login-btn">Connect to Spotify</button>
+<div class="h-screen flex items-center justify-center bg-black font-tech-mono text-green-600">
+	<div class="grid gap-10">
+		<h1 class="text-3xl font-bold underline">Choose how you would like to connect!</h1>
+		<a href={loginLink} class="group transition duration-300">
+			<button class="bg-green-600 border-2 border-green-600 rounded-full p-3 text-black">
+				>Connect to Spotify
+				<span
+					class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"
+				/>
+			</button>
 		</a>
-		<span>
-			{loginLink}
-		</span>
+		<a href="/" class="group transition duration-300">
+			<button>
+				>Log in as guest
+				<span
+					class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
+				/>
+			</button>
+		</a>
+		<a href="/" class="text-lg group transition duration-300">
+			<button> >I changes my mind, take me back </button>
+			<span
+				class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
+			/>
+		</a>
 	</div>
 </div>

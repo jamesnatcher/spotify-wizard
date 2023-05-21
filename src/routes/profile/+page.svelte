@@ -2,45 +2,58 @@
 	import { onMount } from 'svelte';
 	import { user, token, tokenExpired } from '../../stores';
 
-	let data: any;
+	let playlists: any[] = [];
 
-	async function getPlaylists() {
-		const current_user:any = $user;
+	async function getPlaylists(next_url?: string) {
+		const current_user: any = $user;
 		const access_token = $token;
 
-		const url = `https://api.spotify.com/v1/users/${current_user.id}/playlists`;
-		const limit = '50';
-		const offset = '0';
+		console.log(current_user);
 
-		const params = new URLSearchParams({
-			limit,
-			offset
-		});
+		let url;
+
+		if (next_url) {
+			url = next_url;
+		} else {
+			url = `https://api.spotify.com/v1/users/${current_user.id}/playlists?`;
+
+			const params = new URLSearchParams();
+			params.append('limit', '50');
+			params.append('offset', '0');
+
+			url += params;
+		}
 
 		if (access_token) {
-			console.log(access_token)	
-			const res = await fetch(url + params, {
+			console.log('Triggering for url ', url);
+			const res = await fetch(url, {
+				method: 'GET',
 				headers: {
-					Authorization: 'Bearer ' + access_token,
-				},
+					Authorization: 'Bearer ' + access_token
+				}
 			});
 
 			if (res.ok) {
 				const data = await res.json();
-				console.log(data)
+
+				playlists = playlists.concat(data.items);
+
+				if (data.next) {
+					getPlaylists(data.next);
+				}
 			} else {
 				tokenExpired.set(true);
 			}
 		}
 	}
-
 	onMount(getPlaylists);
 </script>
 
-<div class="h-screen flex items-center justify-center bg-green-100">
+<div class="h-screen flex justify-center bg-black font-tech-mono text-green-600">
 	<div class="grid">
-		<h1 class="text-3xl font-bold underline">Main page!</h1>
-		<button on:click={() => console.log(data)}>show playlists</button>
+		{#if $user}
+			<h1 class="text-3xl font-bold">{$user['display_name']}'s playlists</h1>
+		{/if}
 	</div>
 </div>
 ew
