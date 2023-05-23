@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { user, token, code, tokenExpired, client_id, redirect_uri, redirect_wrote } from '../stores';
+	import {
+		user,
+		token,
+		code,
+		tokenExpired,
+		client_id,
+		redirect_uri,
+		redirect_wrote
+	} from '../stores';
 	import { redirect } from '@sveltejs/kit';
 	import { page } from '$app/stores';
 	import { PUBLIC_APP_URL, PUBLIC_SPOTIFY_CLIENT_SECRET } from '$env/static/public';
@@ -32,8 +40,8 @@
 		params.append('grant_type', 'authorization_code');
 		params.append('code', $code);
 		params.append('redirect_uri', $redirect_uri);
-		console.log($code)
-		console.log($redirect_uri)
+		console.log($code);
+		console.log($redirect_uri);
 
 		if ($code.length > 0) {
 			const res = await fetch('https://accounts.spotify.com/api/token', {
@@ -53,7 +61,9 @@
 	}
 
 	async function credentials() {
-		console.log("App url", PUBLIC_APP_URL)
+		console.log('App url', PUBLIC_APP_URL);
+		console.log('App url', $redirect_uri);
+
 		if ($code.length > 0) {
 			await getAccessToken();
 			await getUserData();
@@ -63,20 +73,27 @@
 	onMount(credentials);
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-black font-tech-mono text-green-600">
+<div
+	class="min-h-screen flex items-center justify-center text-5xl"
+>
 	{#if $code.length > 0}
 		<div class="grid">
-			<a href="/profile">
-				<button on:click={() => getUserData()} class="login-btn"
-					>Welcome click here to get started!</button
-				>
+			<a href="/profile" class="group transition duration-300">
+				{#if $user}
+					<button class="login-btn"
+						>Welcome {$user['display_name']}, click here to get started!
+					</button>
+					<span
+						class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
+					/>
+				{/if}
 			</a>
 		</div>
 	{:else}
 		<div class="grid">
 			<a href="/login" class="group transition duration-300">
 				<button class="login-btn"
-					>Click here to log in!
+					>Click here to get started!
 					<span
 						class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
 					/>

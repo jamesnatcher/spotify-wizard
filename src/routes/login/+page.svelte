@@ -26,9 +26,9 @@
 	$: loginLink = authorization_uri + params;
 </script>
 
-<div class="h-screen flex items-center justify-center bg-black font-tech-mono text-green-600">
+<div class="h-screen p-5 flex items-center justify-center bg-black font-tech-mono text-green-600">
 	<div class="grid gap-10">
-		<h1 class="text-3xl font-bold underline">Choose how you would like to connect!</h1>
+		<h1 class="text-3xl font-bold">Choose how you would like to connect:</h1>
 		<a href={loginLink} class="group transition duration-300">
 			<button class="bg-green-600 border-2 border-green-600 rounded-full p-3 text-black">
 				>Connect to Spotify
@@ -37,19 +37,13 @@
 				/>
 			</button>
 		</a>
-		<a href="/" class="group transition duration-300">
+		<a href="/home" class="group transition duration-300">
 			<button>
 				>Log in as guest
 				<span
 					class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
 				/>
 			</button>
-		</a>
-		<a href="/" class="text-lg group transition duration-300">
-			<button> >I changes my mind, take me back </button>
-			<span
-				class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
-			/>
 		</a>
 	</div>
 </div>

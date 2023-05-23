@@ -1,59 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { user, token, tokenExpired } from '../../stores';
-
-	let playlists: any[] = [];
-
-	async function getPlaylists(next_url?: string) {
-		const current_user: any = $user;
-		const access_token = $token;
-
-		console.log(current_user);
-
-		let url;
-
-		if (next_url) {
-			url = next_url;
-		} else {
-			url = `https://api.spotify.com/v1/users/${current_user.id}/playlists?`;
-
-			const params = new URLSearchParams();
-			params.append('limit', '50');
-			params.append('offset', '0');
-
-			url += params;
-		}
-
-		if (access_token) {
-			console.log('Triggering for url ', url);
-			const res = await fetch(url, {
-				method: 'GET',
-				headers: {
-					Authorization: 'Bearer ' + access_token
-				}
-			});
-
-			if (res.ok) {
-				const data = await res.json();
-
-				playlists = playlists.concat(data.items);
-
-				if (data.next) {
-					getPlaylists(data.next);
-				}
-			} else {
-				tokenExpired.set(true);
-			}
-		}
-	}
-	onMount(getPlaylists);
+	import PlaylistGrid from '$lib/PlaylistGrid.svelte';
 </script>
 
-<div class="h-screen flex justify-center bg-black font-tech-mono text-green-600">
-	<div class="grid">
-		{#if $user}
+<div>
+	{#if $user}
+		<div class="flex items-center gap-10 m-10">
+			<img src={$user['images'][0]['url']} alt="user" class="rounded-full w-20 h-20"/>
 			<h1 class="text-3xl font-bold">{$user['display_name']}'s playlists</h1>
-		{/if}
-	</div>
+		</div>
+		<div  class="p-6 m-auto bg-black">
+			<PlaylistGrid/>
+		</div>
+	{/if}
 </div>
-ew

@@ -27,7 +27,7 @@ export const code = readable("", function start(set) {
       const search_params = new URLSearchParams(params)
       if (search_params.has("code")){
         set(search_params.get("code") || "")
-        window.history.pushState("object or string", "Title", "/");
+        window.history.pushState("object or string", "Title", "/home");
 
       }
     }
@@ -59,6 +59,6 @@ export const user = writable(null);
 
 export const redirect_wrote = writable(false);
 
-export const redirect_uri = writable(PUBLIC_APP_URL);
+export const redirect_uri = writable(PUBLIC_APP_URL + "/home");
 
 export const client_id = writable('8602d91b2c7e4d848d3d1e12657a441d');

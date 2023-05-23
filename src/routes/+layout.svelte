@@ -4,5 +4,7 @@
 </script>
 
 
-<Nav />
+<div class="min-h-screen bg-black font-tech-mono text-green-600">
+	<Nav />
 <slot />
+</div>
