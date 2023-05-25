@@ -8,12 +8,8 @@
 		redirect_uri,
 		redirect_wrote
 	} from '../stores';
-	import { redirect } from '@sveltejs/kit';
-	import { page } from '$app/stores';
 	import { PUBLIC_APP_URL, PUBLIC_SPOTIFY_CLIENT_SECRET } from '$env/static/public';
 	import { onMount } from 'svelte';
-
-	let access_token = $token;
 
 	async function getUserData() {
 		const access_token = $token;
@@ -33,7 +29,9 @@
 	}
 
 	async function getAccessToken() {
-		const header_string = btoa($client_id + ':' + PUBLIC_SPOTIFY_CLIENT_SECRET);
+		const header_string = Buffer.from($client_id + ':' + PUBLIC_SPOTIFY_CLIENT_SECRET).toString(
+			'base64'
+		);
 
 		const params = new URLSearchParams();
 		params.append('client_id', $client_id);
@@ -61,8 +59,6 @@
 	}
 
 	async function credentials() {
-		console.log('App url', PUBLIC_APP_URL);
-		console.log('App url', $redirect_uri);
 
 		if ($code.length > 0) {
 			await getAccessToken();
@@ -73,9 +69,7 @@
 	onMount(credentials);
 </script>
 
-<div
-	class="min-h-screen flex items-center justify-center text-5xl"
->
+<div class="min-h-screen flex items-center justify-center text-5xl">
 	{#if $code.length > 0}
 		<div class="grid">
 			<a href="/profile" class="group transition duration-300">

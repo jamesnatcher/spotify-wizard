@@ -79,7 +79,7 @@
 		{/if}
 	</div>
 	<div
-		class="grid grid-cols-1 gap-2 md:gap-6 xl:gap-8 justify-center items-center mt-8 md:mt-16 md:grid-cols-2 2xl:grid-cols-4 text-2xl lg:text-5xl"
+		class={`grid ${$user ? 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-3'} gap-2 md:gap-6 xl:gap-8 justify-center items-center mt-8 md:mt-16 text-2xl lg:text-5xl`}
 	>
 		<a
 			href="/createPlaylist"

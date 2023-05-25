@@ -62,3 +62,5 @@ export const redirect_wrote = writable(false);
 export const redirect_uri = writable(PUBLIC_APP_URL + "home");
 
 export const client_id = writable('8602d91b2c7e4d848d3d1e12657a441d');
+
+export const playlist_page_target = writable("");

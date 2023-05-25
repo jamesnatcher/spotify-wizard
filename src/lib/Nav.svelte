@@ -6,7 +6,7 @@
 </script>
 
 {#if home}
-		<a href="/home" class="absolute mx-auto mt-20 left-0 right-0 text-center flex justify-center items-center">
+		<a href="/home" class="absolute mx-auto lg:mt-20 left-0 right-0 text-center flex justify-center items-center">
 			<img
 				class="h-40 w-40 m-2 lg:h-24 lg:w-24"
 				alt="The project logo"
@@ -15,7 +15,7 @@
 			<h1 class="lg:text-8xl text-4xl m-2 font-bold font-major-mono">Spotify Wizard</h1>
 		</a>
 {:else}
-		<a href="/home" class="flex justify-center items-center mb-10">
+		<a href="/home" class="flex justify-center items-center lg:mb-10">
 			<img
 				class="rounded-full w-20"
 				alt="The project logo"

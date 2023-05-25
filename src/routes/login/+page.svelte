@@ -13,7 +13,7 @@
 	}
 
 	let state = generateRandomString(16);
-	let scope = 'user-read-private user-read-email user-top-read playlist-modify-public';
+	let scope = 'user-read-private user-read-email user-top-read playlist-modify-public playlist-read-private';
 	let authorization_uri = 'https://accounts.spotify.com/authorize?';
 
 	$: params = new URLSearchParams({

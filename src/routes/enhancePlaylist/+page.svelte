@@ -16,16 +16,17 @@ import PlaylistGrid from '$lib/PlaylistGrid.svelte';
 			first_select = true;
 		}
 	}
+
 </script>
 
 {#if $user}
-	<div class="max-h-screen flex flex-col gap-4 justify-center items-center p-10">
+	<div class="max-h-screen flex flex-col gap-4 justify-center items-center p-5 lg:p-10">
 		<!-- tabs -->
 
 		<h1 class="text-3xl font-bold">Enhance a new playlist</h1>
 
 		<div
-			class="grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 space-x-2 border border-green-600 rounded-xl p-2"
+			class="grid w-full grid-cols-3 space-x-2 border border-green-600 rounded-xl p-2"
 		>
 			{#each steps as step, id}
 				<div>
@@ -50,20 +51,17 @@ import PlaylistGrid from '$lib/PlaylistGrid.svelte';
 			{/each}
 		</div>
 
+		<div class={`h-screen w-full overflow-auto p-2 lg:p-10`}>
+
 		{#if selected_step == steps[0]}
-			<div class="h-screen w-full overflow-auto border border-green-600 rounded-lg p-2 lg:p-10">
 				<PlaylistGrid small={true} bind:selected_playlist />
-			</div>
-		{:else if selected_step == steps[1]}
-			<div class="h-screen w-full overflow-auto border border-green-600 rounded-lg p-10">
-				STEP 
+		{:else if selected_step == steps[1]} 
 				<Playlist selected_playlist={selected_playlist}/>
-			</div>
 		{:else}
-			<div class="h-screen w-full overflow-auto border border-green-600 rounded-lg p-10">
 				STEP 3
-			</div>
 		{/if}
+	</div>
+
 	</div>
 {:else}
 	No user, please login first

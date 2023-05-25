@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { user, token, tokenExpired } from '../stores';
+	import { user, token, tokenExpired, playlist_page_target } from '../stores';
 
 	let playlists: any[] = [];
-    export let selected_playlist: any;
+	export let selected_playlist: any = null;
 
-    export let small = false;
+	export let small = false;
 
 	async function getPlaylists(next_url?: string) {
 		const current_user: any = $user;
@@ -51,6 +52,13 @@
 		}
 	}
 
+	async function clickPlaylist(playlist: any) {
+		selected_playlist = playlist;
+		console.log($playlist_page_target);
+		playlist_page_target.set(playlist);
+		$page.url.pathname = '/playlistPage';
+	}
+
 	let searchTerm = '';
 
 	$: selected_playlists = playlists.filter((playlist) => {
@@ -60,27 +68,33 @@
 	onMount(getPlaylists);
 </script>
 
-	<input
-		class="w-full border border-green-600 rounded-xl pl-5 bg-black placeholder-green-600"
-		type="text"
-		placeholder="Search for a specific playlist..."
-		bind:value={searchTerm}
-	/>
-		<!-- class="grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-8" -->
+<input
+	class="w-full border border-green-600 rounded-xl pl-5 bg-black placeholder-green-600"
+	type="text"
+	placeholder="Search for a specific playlist..."
+	bind:value={searchTerm}
+/>
+<!-- class="grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-8" -->
 
-    <div
-        class={`grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-5 ${small ? '2xl:grid-cols-6' : '2xl:grid-cols-6'}`}
-	>
-		{#each selected_playlists as playlist}
+<div
+	class={`grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-5 ${
+		small ? '2xl:grid-cols-8' : '2xl:grid-cols-8'
+	}`}
+>
+	{#each selected_playlists as playlist}
+		{#if playlist.public}
 			<div class="flex lg:grid border border-green-600 truncate text-ellipsis">
 				<img
-					class=" object-cover h-24 w-24 lg:h-56 lg:w-56 xl:h-52 xl:w-52"
+					class=" object-cover h-28 w-28 lg:h-56 lg:w-56 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60"
 					src={playlist['images'][0]['url']}
 					alt="playlist cover"
 				/>
 
 				<div class="flex flex-col items-start p-6 mx-5 lg:mx-0">
-					<button on:click={() => selected_playlist = playlist} class="text-xl font-semibold hover:underline text-ellipsis">
+					<button
+						on:click={() => clickPlaylist(playlist)}
+						class="text-xl font-semibold hover:underline text-ellipsis"
+					>
 						{playlist.name}
 					</button>
 					<div class="max-w-full truncate text-ellipsis">
@@ -92,5 +106,6 @@
 					</div>
 				</div>
 			</div>
-		{/each}
-	</div>
+		{/if}
+	{/each}
+</div>
