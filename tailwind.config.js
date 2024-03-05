@@ -11,7 +11,5 @@ export default {
 		// 'wizard-light': '#19a844'
 		extend: {}
 	},
-	plugins: [
-		require('@tailwindcss/forms'),
-	]
+	plugins: [require('@tailwindcss/forms')]
 };
