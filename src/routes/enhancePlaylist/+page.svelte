@@ -13,9 +13,11 @@
 
 	let selectedStep: any = steps[0];
 
-	let selectedPlaylists: any = null;
+	let selectedPlaylist: any = null;
+
 	$: {
-		if (selectedPlaylists != null && !first_select) {
+		if (selectedPlaylist != null && !first_select) {
+			console.log('trigger');
 			selectedStep = steps[1];
 			first_select = true;
 		}
@@ -39,12 +41,12 @@
 						class="peer hidden"
 						on:click={() => (selectedStep = step)}
 						checked={selectedStep == step}
-						disabled={selectedPlaylists ? false : true}
+						disabled={selectedPlaylist ? false : true}
 					/>
 					<label
 						for={id.toString()}
 						class={`block cursor-pointer select-none rounded-xl p-2 text-center ${
-							selectedPlaylists || selectedStep == step ? 'underline' : 'line-through'
+							selectedPlaylist || selectedStep == step ? 'underline' : 'line-through'
 						} peer-checked:bg-rose-600 peer-checked:font-bold peer-checked:text-white`}
 						>{step}</label
 					>
@@ -54,9 +56,9 @@
 
 		<div class={`h-screen w-full overflow-auto p-2 lg:p-10`}>
 			{#if selectedStep == steps[0]}
-				<PlaylistGrid {playlists} small={true} bind:selectedPlaylists />
+				<PlaylistGrid {playlists} {selectedStep} small={true} bind:selectedPlaylist />
 			{:else if selectedStep == steps[1]}
-				<Playlist {selectedPlaylists} />
+				<Playlist {selectedPlaylist} />
 			{:else}
 				STEP 3
 			{/if}

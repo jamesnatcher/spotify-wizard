@@ -1,49 +1,26 @@
 <script lang="ts">
-	import { PUBLIC_APP_URL, PUBLIC_SPOTIFY_CLIENT_ID } from '$env/static/public';
-
-	function generateRandomString(length: number) {
-		let text = '';
-		let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-		for (let i = 0; i < length; i++) {
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
-		}
-		return text;
-	}
-
-	let state = generateRandomString(16);
-	let scope =
-		'user-read-private user-read-email user-top-read playlist-modify-public playlist-read-private';
-	const authorization_uri = 'https://accounts.spotify.com/authorize?';
-	const redirect_uri = PUBLIC_APP_URL + 'api/auth/callback';
-
-	let params = new URLSearchParams({
-		response_type: 'code',
-		client_id: PUBLIC_SPOTIFY_CLIENT_ID,
-		scope,
-		redirect_uri: redirect_uri,
-		state
-	});
-	let loginLink = authorization_uri + params;
 </script>
 
 <div class="h-screen p-5 flex items-center justify-center bg-black font-tech-mono text-green-600">
 	<div class="grid gap-10">
 		<h1 class="text-3xl font-bold">Choose how you would like to connect:</h1>
-		<a
-			href={loginLink}
-			class="group transition duration-300 w-1/2 bg-green-600 border-2 border-green-600 rounded-full p-3 text-black"
-		>
-			&gtConnect to Spotify
-			<span
-				class="block max-w-0 w-1/2 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"
-			/>
-		</a>
-		<a href="/home" class="group transition duration-300">
-				&gtLog in as guest
+		<form method="POST">
+			<button
+				type="submit"
+				formaction="?/login"
+				class="group transition duration-300 w-1/2 bg-green-600 border-2 border-green-600 rounded-full p-3 text-black"
+			>
+				&gtConnect to Spotify
 				<span
-					class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
+					class="block max-w-0 w-1/2 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"
 				/>
+			</button>
+		</form>
+		<a href="/home" class="group transition duration-300">
+			&gtLog in as guest
+			<span
+				class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-600"
+			/>
 		</a>
 	</div>
 </div>

@@ -14,7 +14,7 @@
 			<h1 class="text-3xl font-bold">{user['display_name']}'s playlists</h1>
 		</div>
 		<div class="p-6 m-auto bg-black">
-			<PlaylistGrid playlists={playlists}/>
+			<PlaylistGrid {playlists} />
 		</div>
 	{/if}
 </div>

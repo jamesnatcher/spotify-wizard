@@ -1,23 +1,22 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import {
-		playlist_page_target,
-	} from '../stores';
-
 	export let playlists: any[] = [];
-	export let selectedPlaylists: any = null;
-
+	export let filteredPlaylists: any[] = [];
+	export let selectedPlaylist: any = null;
+	export let selectedStep: any = null;
 	export let small = false;
 
 	async function clickPlaylist(playlist: any) {
-		selectedPlaylists = playlist;
-		playlist_page_target.set(playlist);
-		$page.url.pathname = '/playlistPage';
+		selectedPlaylist = playlist;
+		selectedStep = 'Settings';
 	}
 
 	let searchTerm = '';
 
-	$: selectedPlaylists = playlists.filter((playlist) => {
+	$: filteredPlaylists = playlists.filter((playlist) => {
+		if (searchTerm == '') {
+			return true;
+		}
+
 		return playlist.name.includes(searchTerm);
 	});
 </script>
@@ -47,7 +46,7 @@
 		small ? '2xl:grid-cols-8' : '2xl:grid-cols-8'
 	}`}
 >
-	{#each selectedPlaylists as playlist}
+	{#each filteredPlaylists as playlist}
 		{#if playlist.public}
 			<div class="flex lg:grid border border-green-600 truncate text-ellipsis">
 				<img
@@ -58,7 +57,7 @@
 
 				<div class="flex flex-col items-start p-6 mx-5 lg:mx-0">
 					<button
-						on:click={() => clickPlaylist(playlist)}
+						on:click={async () => clickPlaylist(playlist)}
 						class="text-xl font-semibold hover:underline text-ellipsis"
 					>
 						{playlist.name}

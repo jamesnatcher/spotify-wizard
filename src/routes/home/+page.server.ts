@@ -5,7 +5,7 @@ import { redirect } from '@sveltejs/kit';
 export const load: PageServerLoad = async (event) => {
 	const $accessToken = get(accessToken);
 
-	if (!$accessToken){
+	if (!$accessToken) {
 		throw redirect(301, '/');
 	}
 	let user;
