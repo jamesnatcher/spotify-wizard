@@ -19,23 +19,7 @@ import { PUBLIC_APP_URL } from '$env/static/public';
 // export const code = writable(null);
 // // window.history.pushState("object or string", "Title", "/");
 
-export const code = readable("", function start(set) {
-  if (window){
-    if(window.location.href){
-      const indexOfHostName = window.location.href.indexOf("code")
-      const params = window.location.href.slice(indexOfHostName, window.location.href.length)
-      const search_params = new URLSearchParams(params)
-      if (search_params.has("code")){
-        set(search_params.get("code") || "")
-        window.history.pushState("object or string", "Title", "/home");
-
-      }
-    }
-  }
-})
-
-
-export const token = writable(null)
+export const token = writable(null);
 
 // export const token = readable("", function start(set) {
 //   if (window){
@@ -53,14 +37,20 @@ export const token = writable(null)
 
 export const timeRange = writable('medium_term');
 
-export const tokenExpired = writable(false);
-
-export const user = writable(null);
-
 export const redirect_wrote = writable(false);
 
-export const redirect_uri = writable(PUBLIC_APP_URL + "home");
+export const redirect_uri = writable(PUBLIC_APP_URL + 'home');
 
-export const client_id = writable('8602d91b2c7e4d848d3d1e12657a441d');
+export const playlistPageOffset = writable(0);
 
-export const playlist_page_target = writable("");
+export const playlist_page_target = writable('');
+
+export const appUrl = readable(String(), function start(set) {
+	set(PUBLIC_APP_URL);
+});
+
+export const accessToken = writable(null);
+export const refreshToken = writable(null);
+export const user = writable(null);
+
+export const tokenExpired = writable(false);

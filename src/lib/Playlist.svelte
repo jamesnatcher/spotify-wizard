@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import { user, token, tokenExpired } from '../stores';
 
-	export let selected_playlist: any;
-	console.log(selected_playlist);
+	export let selectedPlaylists: any;
+	console.log(selectedPlaylists);
 
 	let songs: any[] = [];
 
@@ -20,7 +20,7 @@
 		if (next_url) {
 			url = next_url;
 		} else {
-			url = selected_playlist['tracks'].href + '?';
+			url = selectedPlaylists['tracks'].href + '?';
 			const params = new URLSearchParams();
 			params.append('market', 'ES');
 			params.append('limit', '50');
@@ -59,15 +59,17 @@
 	onMount(getSongsFromPlaylist);
 </script>
 
-<div class="bg-green-400 text-black grid lg:flex justify-center border border-green-600 rounded-lg p-2">
+<div
+	class="bg-green-400 text-black grid lg:flex justify-center border border-green-600 rounded-lg p-2"
+>
 	<div class="flex gap-4 py-5 px-10">
 		<img
 			class=" object-cover h-28 w-28 lg:h-56 lg:w-56 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60"
-			src={selected_playlist['images'][0]['url']}
+			src={selectedPlaylists['images'][0]['url']}
 			alt="playlist cover"
 		/>
-		<h3 class="text-lg font-bold">{selected_playlist.name}</h3>
-		<p class="truncate">{selected_playlist.description}</p>
+		<h3 class="text-lg font-bold">{selectedPlaylists.name}</h3>
+		<p class="truncate">{selectedPlaylists.description}</p>
 	</div>
 	<div class="w-1/2 overflow-auto h-52">
 		{#each songs as song}
