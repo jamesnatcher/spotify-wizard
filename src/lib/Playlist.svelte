@@ -8,16 +8,25 @@
 	let songs: any[] = [];
 
 	async function getSongsFromPlaylist(next_url?: string) {
-		console.log(selectedPlaylist);
-		const res = await fetch(`/api/spotifyAPI/playlist/${selectedPlaylist['id']}`);
+		let url = `https://api.spotify.com/v1/playlists/${selectedPlaylist['id']}/tracks?`;
 
-		if (res.ok) {
-			const data = await res.json();
-			songs = data['items'];
+		const urlParams = new URLSearchParams();
+		urlParams.append('market', 'ES');
+		url += urlParams;
+
+		if ($accessToken) {
+			const res = await fetch(url, {
+				method: 'GET',
+				headers: {
+					Authorization: 'Bearer ' + $accessToken
+				}
+			});
+			if (res.ok) {
+				const data = await res.json();
+				songs = data['items'];
+			}
 		}
 	}
-
-	$: console.log(songs);
 
 	onMount(getSongsFromPlaylist);
 </script>

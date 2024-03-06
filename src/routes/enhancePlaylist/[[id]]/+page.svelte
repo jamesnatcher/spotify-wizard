@@ -1,11 +1,21 @@
 <script lang="ts">
 	import Playlist from '$lib/Playlist.svelte';
 	import PlaylistGrid from '$lib/PlaylistGrid.svelte';
+	import { onMount } from 'svelte';
+	import { accessToken, playlistPageOffset } from '../../../stores.js';
 
 	export let data;
 
-	const user = data.user;
-	const playlists = data.playlists['items'];
+	if (Number.isNaN(data.offset)) {
+		playlistPageOffset.set(0);
+	} else {
+		playlistPageOffset.set(data.offset);
+	}
+
+	$: console.log(data.offset);
+
+	let user: any | null = null;
+	let playlists: any | null = null;
 
 	const steps = ['Select playlist', 'Settings', 'Result'];
 
@@ -17,14 +27,47 @@
 
 	$: {
 		if (selectedPlaylist != null && !first_select) {
-			console.log('trigger');
 			selectedStep = steps[1];
 			first_select = true;
 		}
 	}
+
+	async function getPlaylists(offset: number, userID: any) {
+		let playlistsURL = `https://api.spotify.com/v1/users/${userID}/playlists?`;
+
+		const params = new URLSearchParams();
+		params.append('limit', '50');
+		params.append('offset', (offset * 50).toString());
+		playlistsURL += params;
+
+		const playlistsRes = await fetch(playlistsURL, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${$accessToken}`
+			}
+		});
+		if (playlistsRes.ok) {
+			const data = await playlistsRes.json();
+			playlists = data['items'];
+		}
+	}
+
+	onMount(async () => {
+		const res = await fetch('https://api.spotify.com/v1/me', {
+			headers: {
+				Authorization: `Bearer ${$accessToken}`
+			}
+		});
+
+		if (res.ok) {
+			user = await res.json();
+
+			await getPlaylists($playlistPageOffset, user['id']);
+		}
+	});
 </script>
 
-{#if user !== null}
+{#if user !== null && playlists !== null}
 	<div class="max-h-screen flex flex-col gap-4 justify-center items-center p-5 lg:p-10">
 		<!-- tabs -->
 
@@ -64,6 +107,4 @@
 			{/if}
 		</div>
 	</div>
-{:else}
-	No user, please login first
 {/if}

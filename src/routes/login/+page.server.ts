@@ -13,24 +13,7 @@ function generateRandomString(length: number) {
 	return text;
 }
 
-export const load: PageServerLoad = async () => {};
-
-export const actions = {
-	login: async () => {
-		console.log('treig');
-		let state = generateRandomString(16);
-		const authorization_uri = 'https://accounts.spotify.com/authorize?';
-		const redirect_uri = PUBLIC_APP_URL + 'api/auth/callback';
-
-		let params = new URLSearchParams({
-			response_type: 'code',
-			client_id: PRIVATE_SPOTIFY_CLIENT_ID,
-			scope:
-				'user-read-private user-read-email user-top-read playlist-modify-public playlist-read-private',
-			redirect_uri: redirect_uri,
-			state
-		});
-		let loginLink = authorization_uri + params;
-		throw redirect(301, loginLink);
-	}
-} satisfies Actions;
+export const load: PageServerLoad = async ({ url }) => {
+	var state = generateRandomString(16);
+	return { appURL: url.origin, state: state };
+};
