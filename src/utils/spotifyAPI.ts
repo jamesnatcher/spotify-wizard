@@ -7,7 +7,6 @@ if (!code) {
 } else {
 	const accessToken = await getAccessToken(clientId, code);
 	const profile = await fetchProfile(accessToken);
-	console.log(profile); // Profile data logs to console
 }
 
 export async function redirectToAuthCodeFlow(clientId: string) {

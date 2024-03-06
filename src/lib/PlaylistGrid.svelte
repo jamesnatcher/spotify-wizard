@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { playlistPageOffset } from '../stores';
 	export let playlists: any[] = [];
 	export let filteredPlaylists: any[] = [];
 	export let selectedPlaylist: any = null;
@@ -11,7 +12,11 @@
 	}
 
 	let searchTerm = '';
+	let previousPage = $playlistPageOffset - 1;
+	let nextPage = $playlistPageOffset + 1;
+	console.log(previousPage, nextPage);
 
+	console.log(playlists);
 	$: filteredPlaylists = playlists.filter((playlist) => {
 		if (searchTerm == '') {
 			return true;
@@ -22,24 +27,20 @@
 </script>
 
 <input
-	class="w-full border border-green-600 rounded-xl pl-5 bg-black placeholder-green-600"
+	class="w-full border border-green-600 rounded-xl pl-5 my-4 bg-black placeholder-green-600"
 	type="text"
 	placeholder="Search for a specific playlist..."
 	bind:value={searchTerm}
 />
 <!-- class="grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-8" -->
-<form method="POST" class="pt-5">
-	<button
-		formaction="?/previousPage"
-		class="bg-green-600 border-2 border-green-600 rounded-xl p-2 text-black"
-		>Previous page &lt&lt</button
-	>
-	<button
-		formaction="?/nextPage"
-		class="bg-green-600 border-2 border-green-600 rounded-xl p-2 text-black"
-		>Next page &gt&gt</button
-	>
-</form>
+<a
+	href="/enhancePlaylist/{previousPage}"
+	class="bg-green-600 border-2 border-green-600 rounded-xl p-2 text-black">Previous page &lt&lt</a
+>
+<a
+	href="/enhancePlaylist/{nextPage}"
+	class="bg-green-600 border-2 border-green-600 rounded-xl p-2 text-black">Next page &gt&gt</a
+>
 
 <div
 	class={`grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-5 ${

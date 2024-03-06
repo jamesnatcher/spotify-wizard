@@ -4,10 +4,8 @@ import { get } from 'svelte/store';
 import { redirect, type Actions } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
-	console.log('hello');
 	const $accessToken = get(accessToken);
 	const $playlistPageOffset = get(playlistPageOffset);
-	console.log($playlistPageOffset);
 	let user, playlists;
 	const res = await fetch('https://api.spotify.com/v1/me', {
 		headers: {
