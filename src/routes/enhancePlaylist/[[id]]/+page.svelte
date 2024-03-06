@@ -12,8 +12,6 @@
 		playlistPageOffset.set(data.offset);
 	}
 
-	$: console.log(data.offset);
-
 	let user: any | null = null;
 	let playlists: any | null = null;
 
@@ -68,12 +66,12 @@
 </script>
 
 {#if user !== null && playlists !== null}
-	<div class="max-h-screen flex flex-col gap-4 justify-center items-center p-5 lg:p-10">
+	<div class="flex max-h-screen flex-col items-center justify-center gap-4 p-5 lg:p-10">
 		<!-- tabs -->
 
 		<h1 class="text-3xl font-bold">Enhance a new playlist</h1>
 
-		<div class="grid w-full grid-cols-3 space-x-2 border border-green-600 rounded-xl p-2">
+		<div class="grid w-full grid-cols-3 space-x-2 rounded-xl border border-green-600 p-2">
 			{#each steps as step, id}
 				<div>
 					<input

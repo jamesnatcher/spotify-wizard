@@ -14,9 +14,7 @@
 	let searchTerm = '';
 	let previousPage = $playlistPageOffset - 1;
 	let nextPage = $playlistPageOffset + 1;
-	console.log(previousPage, nextPage);
 
-	console.log(playlists);
 	$: filteredPlaylists = playlists.filter((playlist) => {
 		if (searchTerm == '') {
 			return true;
@@ -27,7 +25,7 @@
 </script>
 
 <input
-	class="w-full border border-green-600 rounded-xl pl-5 my-4 bg-black placeholder-green-600"
+	class="my-4 w-full rounded-xl border border-green-600 bg-black pl-5 placeholder-green-600"
 	type="text"
 	placeholder="Search for a specific playlist..."
 	bind:value={searchTerm}
@@ -35,39 +33,39 @@
 <!-- class="grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-8" -->
 <a
 	href="/enhancePlaylist/{previousPage}"
-	class="bg-green-600 border-2 border-green-600 rounded-xl p-2 text-black">Previous page &lt&lt</a
+	class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Previous page &lt&lt</a
 >
 <a
 	href="/enhancePlaylist/{nextPage}"
-	class="bg-green-600 border-2 border-green-600 rounded-xl p-2 text-black">Next page &gt&gt</a
+	class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Next page &gt&gt</a
 >
 
 <div
-	class={`grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-5 ${
+	class={`mt-8 grid grid-cols-1 items-start gap-2 md:mt-16 md:grid-cols-2 lg:grid-cols-5 lg:gap-8 ${
 		small ? '2xl:grid-cols-8' : '2xl:grid-cols-8'
 	}`}
 >
 	{#each filteredPlaylists as playlist}
 		{#if playlist.public}
-			<div class="flex lg:grid border border-green-600 truncate text-ellipsis">
+			<div class="flex truncate text-ellipsis border border-green-600 lg:grid">
 				<img
-					class=" object-cover h-28 w-28 lg:h-56 lg:w-56 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60"
+					class=" h-28 w-28 object-cover lg:h-56 lg:w-56 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60"
 					src={playlist['images'][0]['url']}
 					alt="playlist cover"
 				/>
 
-				<div class="flex flex-col items-start p-6 mx-5 lg:mx-0">
+				<div class="mx-5 flex flex-col items-start p-6 lg:mx-0">
 					<button
 						on:click={async () => clickPlaylist(playlist)}
-						class="text-xl font-semibold hover:underline text-ellipsis"
+						class="text-ellipsis text-xl font-semibold hover:underline"
 					>
 						{playlist.name}
 					</button>
 					<div class="max-w-full truncate text-ellipsis">
 						{#if playlist.description}
-							<span class="text-sm text-gray-500 mr-5">{playlist.description}</span>
+							<span class="mr-5 text-sm text-gray-500">{playlist.description}</span>
 						{:else}
-							<span class="text-sm italic text-gray-500 pr-5">No description</span>
+							<span class="pr-5 text-sm italic text-gray-500">No description</span>
 						{/if}
 					</div>
 				</div>
