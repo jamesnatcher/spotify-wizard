@@ -1,30 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { accessToken } from '../stores';
-	import { get } from 'svelte/store';
 
 	export let selectedPlaylist: any;
 
 	let songs: any[] = [];
 
-	async function getSongsFromPlaylist(next_url?: string) {
-		let url = `https://api.spotify.com/v1/playlists/${selectedPlaylist['id']}/tracks?`;
-
-		const urlParams = new URLSearchParams();
-		urlParams.append('market', 'ES');
-		url += urlParams;
-
-		if ($accessToken) {
-			const res = await fetch(url, {
-				method: 'GET',
-				headers: {
-					Authorization: 'Bearer ' + $accessToken
-				}
-			});
-			if (res.ok) {
-				const data = await res.json();
-				songs = data['items'];
-			}
+	async function getSongsFromPlaylist() {
+		const res = await fetch(`/api/playlist/${selectedPlaylist['id']}/tracks`);
+		if (res.ok) {
+			const data = await res.json();
+			songs = data['items'] ?? [];
 		}
 	}
 

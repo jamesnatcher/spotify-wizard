@@ -4,7 +4,7 @@
 	export let data;
 
 	const user = data.user;
-	const playlists = data.playlists['items'];
+	const playlists = data.playlists?.items ?? [];
 </script>
 
 <div>
@@ -14,7 +14,7 @@
 			<h1 class="text-3xl font-bold">{user['display_name']}'s playlists</h1>
 		</div>
 		<div class="m-auto bg-black p-6">
-			<PlaylistGrid {playlists} />
+			<PlaylistGrid {playlists} offset={0} />
 		</div>
 	{/if}
 </div>

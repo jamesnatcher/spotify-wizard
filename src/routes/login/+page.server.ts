@@ -1,11 +1,8 @@
-import type { PageServerLoad, Actions } from './$types';
-import { PUBLIC_APP_URL } from '$env/static/public';
-import { PRIVATE_SPOTIFY_CLIENT_ID, PRIVATE_SPOTIFY_CLIENT_SECRET } from '$env/static/private';
-import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 function generateRandomString(length: number) {
 	let text = '';
-	let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 	for (let i = 0; i < length; i++) {
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -13,7 +10,19 @@ function generateRandomString(length: number) {
 	return text;
 }
 
-export const load: PageServerLoad = async ({ url }) => {
-	var state = generateRandomString(16);
+export const load: PageServerLoad = async ({ url, cookies }) => {
+	const state = generateRandomString(16);
+	const isSecure = url.protocol === 'https:';
+
+	// Persist OAuth state so callback can validate against CSRF.
+	// Keep maxAge short because this value is one-time use.
+	cookies.set('spotify_oauth_state', state, {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'lax',
+		secure: isSecure,
+		maxAge: 60 * 10
+	});
+
 	return { appURL: url.origin, state: state };
 };
