@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ params, cookies }) => {
 	const accessToken = cookies.get('spotify_access_token');
 	if (!accessToken) {
-		throw redirect(303, '/login');
+		redirect(303, '/login');
 	}
 
 	const playlistId = params.id;
@@ -18,7 +18,7 @@ export const GET: RequestHandler = async ({ params, cookies }) => {
 
 	if (spotifyRes.status === 401) {
 		cookies.delete('spotify_access_token', { path: '/' });
-		throw redirect(303, '/login');
+		redirect(303, '/login');
 	}
 
 	if (!spotifyRes.ok) {

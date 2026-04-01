@@ -1,25 +1,31 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Playlist from '$lib/Playlist.svelte';
 	import PlaylistGrid from '$lib/PlaylistGrid.svelte';
 
-	export let data;
+	interface Props {
+		data: any;
+	}
+
+	let { data }: Props = $props();
 	const user = data.user;
 	const playlists = data.playlists;
 
 	const steps = ['Select playlist', 'Settings', 'Result'];
 
-	let first_select = false;
+	let first_select = $state(false);
 
-	let selectedStep: any = steps[0];
+	let selectedStep: any = $state(steps[0]);
 
-	let selectedPlaylist: any = null;
+	let selectedPlaylist: any = $state(null);
 
-	$: {
+	run(() => {
 		if (selectedPlaylist !== null && !first_select) {
 			selectedStep = steps[1];
 			first_select = true;
 		}
-	}
+	});
 </script>
 
 {#if user !== null && playlists !== null}
@@ -37,7 +43,7 @@
 						id={id.toString()}
 						value={step}
 						class="peer hidden"
-						on:click={() => (selectedStep = step)}
+						onclick={() => (selectedStep = step)}
 						checked={selectedStep === step}
 						disabled={selectedPlaylist ? false : true}
 					/>

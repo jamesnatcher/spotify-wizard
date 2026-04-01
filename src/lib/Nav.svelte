@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	$: home = $page.url.pathname == '/' || $page.url.pathname == '/login';
+	let home = $derived($page.url.pathname == '/' || $page.url.pathname == '/login');
 </script>
 
 {#if home}

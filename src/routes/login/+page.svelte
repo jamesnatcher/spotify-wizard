@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { PUBLIC_SPOTIFY_CLIENT_ID } from '$env/static/public';
 
-	export let data;
+	interface Props {
+		data: any;
+	}
+
+	let { data }: Props = $props();
 
 	const authorization_uri = 'https://accounts.spotify.com/authorize?';
 	const redirect_uri = data.appURL + '/home';
@@ -26,13 +30,13 @@
 			&gtConnect to Spotify
 			<span
 				class="block h-0.5 w-1/2 max-w-0 bg-black transition-all duration-500 group-hover:max-w-full"
-			/>
+			></span>
 		</a>
 		<a href="/home" class="group transition duration-300">
 			&gtLog in as guest
 			<span
 				class="block h-0.5 max-w-0 bg-green-600 transition-all duration-500 group-hover:max-w-full"
-			/>
+			></span>
 		</a>
 	</div>
 </div>

@@ -1,26 +1,41 @@
 <script lang="ts">
-	export let playlists: any[] = [];
-	export let filteredPlaylists: any[] = [];
-	export let selectedPlaylist: any = null;
-	export let selectedStep: any = null;
-	export let small = false;
-	export let offset = 0;
+	import { run } from 'svelte/legacy';
+
+	interface Props {
+		playlists?: any[];
+		filteredPlaylists?: any[];
+		selectedPlaylist?: any;
+		selectedStep?: any;
+		small?: boolean;
+		offset?: number;
+	}
+
+	let {
+		playlists = [],
+		filteredPlaylists = $bindable([]),
+		selectedPlaylist = $bindable(null),
+		selectedStep = $bindable(null),
+		small = false,
+		offset = 0
+	}: Props = $props();
 
 	async function clickPlaylist(playlist: any) {
 		selectedPlaylist = playlist;
 		selectedStep = 'Settings';
 	}
 
-	let searchTerm = '';
-	$: previousPage = Math.max(0, offset - 1);
-	$: nextPage = offset + 1;
+	let searchTerm = $state('');
+	let previousPage = $derived(Math.max(0, offset - 1));
+	let nextPage = $derived(offset + 1);
 
-	$: filteredPlaylists = playlists.filter((playlist) => {
-		if (searchTerm === '') {
-			return true;
-		}
+	run(() => {
+		filteredPlaylists = playlists.filter((playlist) => {
+			if (searchTerm === '') {
+				return true;
+			}
 
-		return playlist.name.includes(searchTerm);
+			return playlist.name.includes(searchTerm);
+		});
 	});
 </script>
 
@@ -58,7 +73,7 @@
 
 				<div class="mx-5 flex flex-col items-start p-6 lg:mx-0">
 					<button
-						on:click={async () => clickPlaylist(playlist)}
+						onclick={async () => clickPlaylist(playlist)}
 						class="text-ellipsis text-xl font-semibold hover:underline"
 					>
 						{playlist.name}
