@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	export let selectedPlaylist: any;
+	interface Props {
+		selectedPlaylist: any;
+	}
 
-	let songs: any[] = [];
+	let { selectedPlaylist }: Props = $props();
+
+	let songs: any[] = $state([]);
 
 	async function getSongsFromPlaylist() {
 		const res = await fetch(`/api/playlist/${selectedPlaylist['id']}/tracks`);

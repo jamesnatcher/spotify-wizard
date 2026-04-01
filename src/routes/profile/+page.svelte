@@ -1,7 +1,11 @@
 <script lang="ts">
 	import PlaylistGrid from '$lib/PlaylistGrid.svelte';
 
-	export let data;
+	interface Props {
+		data: any;
+	}
+
+	let { data }: Props = $props();
 
 	const user = data.user;
 	const playlists = data.playlists?.items ?? [];

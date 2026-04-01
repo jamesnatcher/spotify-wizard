@@ -4,7 +4,7 @@ import { redirect } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const accessToken = cookies.get('spotify_access_token');
 	if (!accessToken) {
-		throw redirect(303, '/login');
+		redirect(303, '/login');
 	}
 
 	const rawOffset = Number(params.id);
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
 	if (!meRes.ok) {
 		cookies.delete('spotify_access_token', { path: '/' });
-		throw redirect(303, '/login');
+		redirect(303, '/login');
 	}
 
 	const user = await meRes.json();

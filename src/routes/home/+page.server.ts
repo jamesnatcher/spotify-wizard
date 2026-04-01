@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		cookies.delete('spotify_oauth_state', { path: '/' });
 
 		if (!code || !state || !expectedState || state !== expectedState) {
-			throw redirect(303, '/login');
+			redirect(303, '/login');
 		}
 
 		const params = new URLSearchParams();
@@ -50,7 +50,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 			});
 		} else {
 			cookies.delete('spotify_access_token', { path: '/' });
-			throw redirect(303, '/');
+			redirect(303, '/');
 		}
 	}
 
