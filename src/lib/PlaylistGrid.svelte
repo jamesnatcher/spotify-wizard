@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { playlistPageOffset } from '../stores';
 	export let playlists: any[] = [];
 	export let filteredPlaylists: any[] = [];
 	export let selectedPlaylist: any = null;
 	export let selectedStep: any = null;
 	export let small = false;
+	export let offset = 0;
 
 	async function clickPlaylist(playlist: any) {
 		selectedPlaylist = playlist;
@@ -12,11 +12,11 @@
 	}
 
 	let searchTerm = '';
-	let previousPage = $playlistPageOffset - 1;
-	let nextPage = $playlistPageOffset + 1;
+	$: previousPage = Math.max(0, offset - 1);
+	$: nextPage = offset + 1;
 
 	$: filteredPlaylists = playlists.filter((playlist) => {
-		if (searchTerm == '') {
+		if (searchTerm === '') {
 			return true;
 		}
 
@@ -30,15 +30,17 @@
 	placeholder="Search for a specific playlist..."
 	bind:value={searchTerm}
 />
-<!-- class="grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-8" -->
-<a
-	href="/enhancePlaylist/{previousPage}"
-	class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Previous page &lt&lt</a
->
-<a
-	href="/enhancePlaylist/{nextPage}"
-	class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Next page &gt&gt</a
->
+{#if small}
+	<!-- class="grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-8" -->
+	<a
+		href="/enhancePlaylist/{previousPage}"
+		class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Previous page &lt&lt</a
+	>
+	<a
+		href="/enhancePlaylist/{nextPage}"
+		class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Next page &gt&gt</a
+	>
+{/if}
 
 <div
 	class={`mt-8 grid grid-cols-1 items-start gap-2 md:mt-16 md:grid-cols-2 lg:grid-cols-5 lg:gap-8 ${

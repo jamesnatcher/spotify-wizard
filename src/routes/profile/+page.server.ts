@@ -1,15 +1,16 @@
 import type { PageServerLoad } from './$types';
-import { accessToken, playlistPageOffset } from '../../stores';
-import { get } from 'svelte/store';
-import { redirect, type Actions } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ params }) => {
-	const $accessToken = get(accessToken);
-	const $playlistPageOffset = get(playlistPageOffset);
+export const load: PageServerLoad = async ({ cookies }) => {
+	const accessToken = cookies.get('spotify_access_token');
+	if (!accessToken) {
+		throw redirect(303, '/login');
+	}
+
 	let user, playlists;
 	const res = await fetch('https://api.spotify.com/v1/me', {
 		headers: {
-			Authorization: `Bearer ${$accessToken}`
+			Authorization: `Bearer ${accessToken}`
 		}
 	});
 
@@ -19,13 +20,13 @@ export const load: PageServerLoad = async ({ params }) => {
 		let playlistsURL = `https://api.spotify.com/v1/users/${user['id']}/playlists?`;
 		const params = new URLSearchParams();
 		params.append('limit', '50');
-		params.append('offset', ($playlistPageOffset * 50).toString());
+		params.append('offset', '0');
 		playlistsURL += params;
 
 		const playlistsRes = await fetch(playlistsURL, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${$accessToken}`
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 
@@ -34,21 +35,9 @@ export const load: PageServerLoad = async ({ params }) => {
 			playlists = data;
 		}
 	} else {
-		throw redirect(308, '/');
+		cookies.delete('spotify_access_token', { path: '/' });
+		throw redirect(303, '/login');
 	}
 
 	return { user, playlists };
 };
-
-export const actions = {
-	nextPage: async (event) => {
-		let $playlistPageOffset = get(playlistPageOffset);
-		playlistPageOffset.set($playlistPageOffset + 1);
-		throw redirect(301, '/enhancePlaylist');
-	},
-	previousPage: async (event) => {
-		let $playlistPageOffset = get(playlistPageOffset);
-		playlistPageOffset.set($playlistPageOffset - 1);
-		throw redirect(301, '/enhancePlaylist');
-	}
-} satisfies Actions;
