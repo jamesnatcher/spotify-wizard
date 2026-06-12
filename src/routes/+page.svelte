@@ -1,6 +1,10 @@
+<script lang="ts">
+	import { resolve } from '$app/paths';
+</script>
+
 <div class="flex min-h-screen items-center justify-center text-5xl">
 	<div class="grid">
-		<a href="/login" class="group transition duration-300">
+		<a href={resolve('/login')} class="group transition duration-300">
 			<button class="login-btn"
 				>Click here to get started!
 				<span

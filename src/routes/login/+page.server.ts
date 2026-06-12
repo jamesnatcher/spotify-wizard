@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import { setOAuthStateCookie } from '$lib/server/spotify';
 
 function generateRandomString(length: number) {
 	let text = '';
@@ -12,17 +13,7 @@ function generateRandomString(length: number) {
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
 	const state = generateRandomString(16);
-	const isSecure = url.protocol === 'https:';
+	setOAuthStateCookie(cookies, state, url.protocol === 'https:');
 
-	// Persist OAuth state so callback can validate against CSRF.
-	// Keep maxAge short because this value is one-time use.
-	cookies.set('spotify_oauth_state', state, {
-		path: '/',
-		httpOnly: true,
-		sameSite: 'lax',
-		secure: isSecure,
-		maxAge: 60 * 10
-	});
-
-	return { appURL: url.origin, state: state };
+	return { appURL: url.origin, state };
 };

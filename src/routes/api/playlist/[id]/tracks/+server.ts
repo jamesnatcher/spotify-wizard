@@ -1,14 +1,12 @@
 import { json, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { clearAccessTokenCookie, requireAccessToken } from '$lib/server/spotify';
+import type { SpotifyPaginatedPlaylistTracks } from '$lib/types/spotify';
 
 export const GET: RequestHandler = async ({ params, cookies }) => {
-	const accessToken = cookies.get('spotify_access_token');
-	if (!accessToken) {
-		redirect(303, '/login');
-	}
+	const accessToken = requireAccessToken(cookies);
 
-	const playlistId = params.id;
-	const tracksURL = new URL(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`);
+	const tracksURL = new URL(`https://api.spotify.com/v1/playlists/${params.id}/tracks`);
 	tracksURL.searchParams.set('market', 'ES');
 
 	const spotifyRes = await fetch(tracksURL, {
@@ -17,13 +15,14 @@ export const GET: RequestHandler = async ({ params, cookies }) => {
 	});
 
 	if (spotifyRes.status === 401) {
-		cookies.delete('spotify_access_token', { path: '/' });
-		redirect(303, '/login');
+		clearAccessTokenCookie(cookies);
+		throw redirect(303, '/login');
 	}
 
 	if (!spotifyRes.ok) {
 		return json({ items: [] }, { status: spotifyRes.status });
 	}
 
-	return json(await spotifyRes.json());
+	const data = (await spotifyRes.json()) as SpotifyPaginatedPlaylistTracks;
+	return json(data);
 };

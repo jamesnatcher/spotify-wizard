@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
+	import { resolve } from '$app/paths';
+	import type { SpotifyPlaylist } from '$lib/types/spotify';
 
 	interface Props {
-		playlists?: any[];
-		filteredPlaylists?: any[];
-		selectedPlaylist?: any;
-		selectedStep?: any;
+		playlists?: SpotifyPlaylist[];
+		filteredPlaylists?: SpotifyPlaylist[];
+		selectedPlaylist?: SpotifyPlaylist | null;
+		selectedStep?: string | null;
 		small?: boolean;
 		offset?: number;
+		paginationBasePath?: '/enhancePlaylist' | '/profile';
 	}
 
 	let {
@@ -16,10 +19,11 @@
 		selectedPlaylist = $bindable(null),
 		selectedStep = $bindable(null),
 		small = false,
-		offset = 0
+		offset = 0,
+		paginationBasePath = '/enhancePlaylist'
 	}: Props = $props();
 
-	async function clickPlaylist(playlist: any) {
+	function clickPlaylist(playlist: SpotifyPlaylist) {
 		selectedPlaylist = playlist;
 		selectedStep = 'Settings';
 	}
@@ -27,6 +31,9 @@
 	let searchTerm = $state('');
 	let previousPage = $derived(Math.max(0, offset - 1));
 	let nextPage = $derived(offset + 1);
+	let showPagination = $derived(
+		Boolean(paginationBasePath) && (small || offset > 0 || playlists.length === 50)
+	);
 
 	run(() => {
 		filteredPlaylists = playlists.filter((playlist) => {
@@ -34,7 +41,7 @@
 				return true;
 			}
 
-			return playlist.name.includes(searchTerm);
+			return playlist.name.toLowerCase().includes(searchTerm.toLowerCase());
 		});
 	});
 </script>
@@ -45,15 +52,19 @@
 	placeholder="Search for a specific playlist..."
 	bind:value={searchTerm}
 />
-{#if small}
-	<!-- class="grid grid-cols-1 gap-2 lg:gap-8 items-start mt-8 md:mt-16 md:grid-cols-2 lg:grid-cols-8" -->
+{#if showPagination}
 	<a
-		href="/enhancePlaylist/{previousPage}"
-		class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Previous page &lt&lt</a
+		href={paginationBasePath === '/profile'
+			? resolve('/profile/[[page]]', { page: String(previousPage) })
+			: resolve('/enhancePlaylist/[[id]]', { id: String(previousPage) })}
+		class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black"
+		aria-disabled={offset === 0}>Previous page &lt;&lt;</a
 	>
 	<a
-		href="/enhancePlaylist/{nextPage}"
-		class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Next page &gt&gt</a
+		href={paginationBasePath === '/profile'
+			? resolve('/profile/[[page]]', { page: String(nextPage) })
+			: resolve('/enhancePlaylist/[[id]]', { id: String(nextPage) })}
+		class="rounded-xl border-2 border-green-600 bg-green-600 p-2 text-black">Next page &gt;&gt;</a
 	>
 {/if}
 
@@ -62,18 +73,20 @@
 		small ? '2xl:grid-cols-8' : '2xl:grid-cols-8'
 	}`}
 >
-	{#each filteredPlaylists as playlist}
+	{#each filteredPlaylists as playlist (playlist.id)}
 		{#if playlist.public}
 			<div class="flex truncate text-ellipsis border border-green-600 lg:grid">
-				<img
-					class=" h-28 w-28 object-cover lg:h-56 lg:w-56 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60"
-					src={playlist['images'][0]['url']}
-					alt="playlist cover"
-				/>
+				{#if playlist.images[0]?.url}
+					<img
+						class=" h-28 w-28 object-cover lg:h-56 lg:w-56 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60"
+						src={playlist.images[0].url}
+						alt="playlist cover"
+					/>
+				{/if}
 
 				<div class="mx-5 flex flex-col items-start p-6 lg:mx-0">
 					<button
-						onclick={async () => clickPlaylist(playlist)}
+						onclick={() => clickPlaylist(playlist)}
 						class="text-ellipsis text-xl font-semibold hover:underline"
 					>
 						{playlist.name}
