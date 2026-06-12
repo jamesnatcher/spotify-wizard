@@ -3,22 +3,22 @@
 
 	import Playlist from '$lib/Playlist.svelte';
 	import PlaylistGrid from '$lib/PlaylistGrid.svelte';
+	import type { PageData } from './$types';
+	import type { SpotifyPlaylist } from '$lib/types/spotify';
 
 	interface Props {
-		data: any;
+		data: PageData;
 	}
 
 	let { data }: Props = $props();
-	const user = data.user;
-	const playlists = data.playlists;
+	const user = $derived(data.user);
+	const playlists = $derived(data.playlists);
 
 	const steps = ['Select playlist', 'Settings', 'Result'];
 
 	let first_select = $state(false);
-
-	let selectedStep: any = $state(steps[0]);
-
-	let selectedPlaylist: any = $state(null);
+	let selectedStep = $state(steps[0]);
+	let selectedPlaylist = $state<SpotifyPlaylist | null>(null);
 
 	run(() => {
 		if (selectedPlaylist !== null && !first_select) {
@@ -30,12 +30,10 @@
 
 {#if user !== null && playlists !== null}
 	<div class="flex max-h-screen flex-col items-center justify-center gap-4 p-5 lg:p-10">
-		<!-- tabs -->
-
 		<h1 class="text-3xl font-bold">Enhance a new playlist</h1>
 
 		<div class="grid w-full grid-cols-3 space-x-2 rounded-xl border border-green-600 p-2">
-			{#each steps as step, id}
+			{#each steps as step, id (step)}
 				<div>
 					<input
 						type="radio"
@@ -45,7 +43,7 @@
 						class="peer hidden"
 						onclick={() => (selectedStep = step)}
 						checked={selectedStep === step}
-						disabled={selectedPlaylist ? false : true}
+						disabled={!selectedPlaylist}
 					/>
 					<label
 						for={id.toString()}
@@ -58,7 +56,7 @@
 			{/each}
 		</div>
 
-		<div class={`h-screen w-full overflow-auto p-2 lg:p-10`}>
+		<div class="h-screen w-full overflow-auto p-2 lg:p-10">
 			{#if selectedStep === steps[0]}
 				<PlaylistGrid
 					{playlists}
@@ -67,7 +65,7 @@
 					small={true}
 					bind:selectedPlaylist
 				/>
-			{:else if selectedStep === steps[1]}
+			{:else if selectedStep === steps[1] && selectedPlaylist}
 				<Playlist {selectedPlaylist} />
 			{:else}
 				STEP 3
